@@ -9,7 +9,7 @@ import {
 import Home from "./pages/Home";
 import UserProfile from "./pages/UserProfile";
 import Categories from "./pages/Categories";
-import MyFeed from "./pages/MyFeed";
+import MyFeed from "./components/MyFeed";
 import Login from "./pages/Login"; 
 import Signup from "./pages/Signup"; 
 import NavBar from "./components/NavBar";
@@ -83,7 +83,7 @@ function App() {
               }
             />
             <Route
-              path="/video/:videoId"  // Route for VideoPlayer
+              path="/video/:videoId"  
               element={<VideoPlayer />}
             />
             <Route path="/login" element={<Login />} />

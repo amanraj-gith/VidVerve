@@ -3,6 +3,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const userRoutes = require('./routes/userRoutes');
 const videoRoutes = require('./routes/videoRoutes');
+
 var cors = require('cors')
 
 require('dotenv').config();
@@ -34,3 +35,5 @@ const PORT = process.env.PORT || 5000;     //env.PORT = 3001
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
+
+module.exports = app;

@@ -14,7 +14,7 @@ function SearchBar() {
 
     return (
         <div className="h-40 w-full bg-[#3ABEF9] flex justify-start items-center px-12">
-            <div className="relative w-1/3  shadow-custom-black rounded-3xl">
+            <div className="relative w-96  shadow-custom-black rounded-3xl">
                 <label className="sr-only" htmlFor="search-input">
                     Search
                 </label>

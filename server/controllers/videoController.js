@@ -1,5 +1,32 @@
 // server/controllers/videoController.js
 const youtubeService = require('../services/youtubeService');
+const User = require('../models/User');
+const UserFeed = require('../models/UserFeed');
+
+// Controller to add video to the personalized feeder
+exports.addVideoToFeeder = async (req, res) => {
+    try {
+        const userId = req.user._id;
+        const { videoId, tags } = req.body;
+
+        if (!tags || tags.length === 0) {
+            return res.status(400).send('Tags are required');
+        }
+
+        const userFeed = new UserFeed({
+            userId,
+            tags,
+            videoId
+        });
+
+        await userFeed.save();
+
+        res.status(200).send('Video added to your feeder successfully!');
+    } catch (error) {
+        console.error('Error adding video to feeder:', error);
+        res.status(500).send('Server error');
+    }
+};
 
 // Controller to get featured videos
 exports.fetchFeaturedVideos = async (req, res) => {
@@ -13,24 +40,35 @@ exports.fetchFeaturedVideos = async (req, res) => {
     }
 };
 
+// Controller to get personalized Content as per User
+exports.fetchPersonalizedVideos = async (req, res) => {
+    try {
+        const userId = req.user._id;
 
-// Controller to get personalized videos
-// exports.fetchPersonalizedVideos = async (req, res) => {   
-//     try {
-//         const preferences = req.user.preferences; 
-//         const videos = await youtubeService.fetchVideosByPreferences(preferences);
-//         res.json(videos);
-//     } catch (error) {
-//         res.status(500).send('Server error');
-//     }
-// };
+        // Fetch tags stored in UserFeed
+        const userFeeds = await UserFeed.find({ userId });
+
+        if (!userFeeds || userFeeds.length === 0) {
+            return res.status(200).json([]); // No personalized content
+        }
+
+        const tags = userFeeds.map(feed => feed.tags).flat();
+
+        // Fetch videos based on tags
+        const videos = await youtubeService.fetchVideosByTags(tags);
+        res.json(videos);
+    } catch (error) {
+        console.error('Error fetching personalized videos:', error);
+        res.status(500).send('Server error');
+    }
+};
 
 // Controller to get videos by tag
 exports.fetchVideosByTag = async (req, res) => {
     try {
         // Get tags from URL parameters
         const tags = req.params.tags ? req.params.tags.split(',') : [];
-
+         console.log(tags);
         // Validate tags
         if (tags.length === 0) {
             return res.status(400).send('No tags provided');
@@ -58,7 +96,6 @@ exports.fetchVideosByTag = async (req, res) => {
         res.status(500).send('Server error');
     }
 };
-
 
 // Controller to search for videos
 exports.searchVideos = async (req, res) => {

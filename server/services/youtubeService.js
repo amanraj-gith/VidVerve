@@ -10,7 +10,7 @@ exports.fetchVideosByTags = async (tags) => {
         const response = await axios.get("https://www.googleapis.com/youtube/v3/search", {
             params: {
                 part: 'snippet',
-                maxResults: 2,
+                maxResults: 20,
                 q: searchQuery,
                 type: 'video',
                 key: YOUTUBE_API_KEY
@@ -29,7 +29,7 @@ exports.fetchVideosByQuery = async (query) => {
         const response = await axios.get("https://www.googleapis.com/youtube/v3/search", {
             params: {
                 part: 'snippet',
-                maxResults: 2,
+                maxResults: 20,
                 q: query,
                 type: 'video',
                 key: YOUTUBE_API_KEY
