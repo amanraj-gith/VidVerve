@@ -7,7 +7,6 @@ import { Link } from 'react-router-dom';
 const FEATURED_QUERY = 'latest tech trends';
 
 function Dashboard() {
-    const [videos, setVideos] = useState([]);
     const [featuredVideos, setFeaturedVideos] = useState([]);
 
     useEffect(() => {
@@ -37,8 +36,7 @@ function Dashboard() {
         axios.get(`${process.env.REACT_APP_API_BASE}/api/video/search`, {
             params: { q: query }
         })
-        .then(response => {
-            setVideos(response.data);
+        .then(() => {
         })
         .catch(error => {
             console.error('Failed to fetch search results:', error);
