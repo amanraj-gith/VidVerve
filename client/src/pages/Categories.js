@@ -13,7 +13,7 @@ function Categories() {
 
     const fetchVideosByTag = async (tag) => {
         try {
-            const response = await axios.get(`http://localhost:3001/api/video/tags/${tag}`);
+            const response = await axios.get(`${process.env.REACT_APP_API_BASE}/api/video/tags/${tag}`);
             setVideos(response.data);
         } catch (error) {
             console.error('Failed to fetch videos by tag:', error);

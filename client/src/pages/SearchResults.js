@@ -15,7 +15,7 @@ const SearchResults = () => {
 
     const fetchSearchResults = async (query) => {
         try {
-            const response = await axios.get(`http://localhost:3001/api/video/search`, {
+            const response = await axios.get(`${process.env.REACT_APP_API_BASE}/api/video/search`, {
                 params: { q: query }
             });
             if (Array.isArray(response.data)) {

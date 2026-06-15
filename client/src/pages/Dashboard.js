@@ -14,7 +14,7 @@ function Dashboard() {
 
     const fetchFeaturedVideos = async () => {
         try {
-            const response = await axios.post('http://localhost:3001/api/video/featured', {
+            const response = await axios.post(`${process.env.REACT_APP_API_BASE}/api/video/featured`, {
                 query: 'latest tech trends'
             });
 
@@ -32,7 +32,7 @@ function Dashboard() {
     };
 
     const handleSearch = (query) => {
-        axios.get(`http://localhost:3001/api/video/search`, {
+        axios.get(`${process.env.REACT_APP_API_BASE}/api/video/search`, {
             params: { q: query }
         })
         .then(response => {
@@ -45,7 +45,7 @@ function Dashboard() {
 
     const handleAddToFeeder = async (videoId, tags) => {
         try {
-            await axios.post('http://localhost:3001/api/video/add-to-feeder', {
+            await axios.post(`${process.env.REACT_APP_API_BASE}/api/video/add-to-feeder`, {
                 videoId: videoId,
                 tags: tags,
             });

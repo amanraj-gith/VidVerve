@@ -1,3 +1,5 @@
+const UserFeed = require('../models/UserFeed');
+
 const saveVideoToFeed = async (req, res) => {
     try {
         const { userId, videoId, tags } = req.body;

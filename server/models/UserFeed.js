@@ -5,3 +5,5 @@ const userFeedSchema = new mongoose.Schema({
   videoId: String,
   tags: [String]  // Array of tag strings
 });
+
+module.exports = mongoose.model('UserFeed', userFeedSchema);
