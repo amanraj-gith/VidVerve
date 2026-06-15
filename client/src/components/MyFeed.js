@@ -12,7 +12,7 @@ const MyFeed = () => {
     const fetchPersonalizedVideos = async () => {
         try {
             const token = localStorage.getItem('token'); // or however you store the token
-            const response = await axios.get('http://localhost:3001/api/video/personalized', {
+            const response = await axios.get(`${process.env.REACT_APP_API_BASE}/api/video/personalized`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             setVideos(response.data);
