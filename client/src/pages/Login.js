@@ -5,15 +5,29 @@ import { AuthContext } from '../context/AuthContext';
 function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
   const { login } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    const userData = { name: 'User', email }; 
-    login(userData);
-    navigate('/dashboard'); 
+    setError('');
+    try {
+      const res = await fetch(`${process.env.REACT_APP_API_BASE}/api/auth/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setError(data.message || 'Login failed');
+        return;
+      }
+      login(data.user, data.token);
+      navigate('/dashboard');
+    } catch (err) {
+      setError('Network error');
+    }
   };
 
   return (
@@ -46,6 +60,7 @@ function Login() {
           <button type="submit" className="mt-14 ml-12 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700">
             Login
           </button>
+          {error && <p className="mt-4 ml-12 text-red-600 text-sm">{error}</p>}
         </form>
       </div>
     </div>

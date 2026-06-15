@@ -1,30 +1,34 @@
 // src/pages/Signup.js
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { AuthContext } from '../context/AuthContext';
 
 function Signup() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
+  const [error, setError] = useState('');
+  const { login } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const handleSignup = async (e) => {
     e.preventDefault();
-
+    setError('');
     try {
       const response = await fetch(`${process.env.REACT_APP_API_BASE}/api/auth/signup`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password, name }),
       });
-
-      if (response.ok) {
-        navigate('/login'); 
-      } else {
-        console.error('Signup failed');
+      const data = await response.json();
+      if (!response.ok) {
+        setError(data.message || 'Signup failed');
+        return;
       }
-    } catch (error) {
-      console.error('Error signing up:', error);
+      login(data.user, data.token);
+      navigate('/dashboard');
+    } catch (err) {
+      setError('Network error');
     }
   };
 
@@ -68,6 +72,7 @@ function Signup() {
         <button type="submit" className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-700">
           Signup
         </button>
+        {error && <p className="mt-4 text-red-600 text-sm">{error}</p>}
       </form>
     </div>
   );

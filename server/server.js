@@ -31,9 +31,11 @@ app.use('/api/auth', userRoutes);
 app.use('/api/video',videoRoutes);
 //This is for all the videosre lated api
 
-const PORT = process.env.PORT || 5000;     //env.PORT = 3001
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+const PORT = process.env.PORT || 5000;
+if (require.main === module) {
+  app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+  });
+}
 
 module.exports = app;
