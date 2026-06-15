@@ -15,20 +15,20 @@ export function AuthProvider({ children }) {
     return savedUser ? JSON.parse(savedUser) : { name: '' };
   });
 
-  const login = (userData) => {
+  const login = (userData, token) => {
     setIsAuthenticated(true);
     setUser(userData);
-    // Save authentication state and user data to localStorage
     localStorage.setItem('isAuthenticated', 'true');
     localStorage.setItem('user', JSON.stringify(userData));
+    if (token) localStorage.setItem('token', token);
   };
 
   const logout = () => {
     setIsAuthenticated(false);
     setUser({ name: '' });
-    // Clear authentication state and user data from localStorage
     localStorage.removeItem('isAuthenticated');
     localStorage.removeItem('user');
+    localStorage.removeItem('token');
   };
 
   useEffect(() => {

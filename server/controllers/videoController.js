@@ -56,7 +56,12 @@ exports.fetchPersonalizedVideos = async (req, res) => {
 
         // Fetch videos based on tags
         const videos = await youtubeService.fetchVideosByTags(tags);
-        res.json(videos);
+        const normalized = (videos || []).map(v => ({
+            id: v.id.videoId,
+            thumbnail: v.snippet.thumbnails?.medium?.url,
+            snippet: v.snippet
+        }));
+        res.json(normalized);
     } catch (error) {
         console.error('Error fetching personalized videos:', error);
         res.status(500).send('Server error');

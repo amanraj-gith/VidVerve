@@ -4,6 +4,8 @@ import SearchBar from '../components/SearchBar';
 import InterestTag from '../components/InterestTag';
 import { Link } from 'react-router-dom';
 
+const FEATURED_QUERY = 'latest tech trends';
+
 function Dashboard() {
     const [videos, setVideos] = useState([]);
     const [featuredVideos, setFeaturedVideos] = useState([]);
@@ -15,7 +17,7 @@ function Dashboard() {
     const fetchFeaturedVideos = async () => {
         try {
             const response = await axios.post(`${process.env.REACT_APP_API_BASE}/api/video/featured`, {
-                query: 'latest tech trends'
+                query: FEATURED_QUERY
             });
 
             // Ensure video objects have thumbnails
@@ -45,10 +47,16 @@ function Dashboard() {
 
     const handleAddToFeeder = async (videoId, tags) => {
         try {
-            await axios.post(`${process.env.REACT_APP_API_BASE}/api/video/add-to-feeder`, {
-                videoId: videoId,
-                tags: tags,
-            });
+            const token = localStorage.getItem('token');
+            if (!token) {
+                alert('Please log in first');
+                return;
+            }
+            await axios.post(
+                `${process.env.REACT_APP_API_BASE}/api/video/add-to-feeder`,
+                { videoId, tags },
+                { headers: { Authorization: `Bearer ${token}` } }
+            );
             alert('Video added to your feeder!');
         } catch (error) {
             console.error('Failed to add video to feeder:', error);
@@ -57,10 +65,7 @@ function Dashboard() {
     };
 
     const VideoCard = ({ video }) => {
-        // Example tags; adjust according to your video structure
-        const tags = video.snippet.tags || [];
-        console.log(tags)
-        console.log(video)
+        const tags = [FEATURED_QUERY];
 
         return (
             <div className="border rounded-lg shadow pb-2 cursor-pointer h-80 bg-white left-8">
