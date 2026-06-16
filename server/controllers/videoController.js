@@ -102,6 +102,44 @@ exports.fetchVideosByTag = async (req, res) => {
     }
 };
 
+// Controller to get user's saved tag breakdown
+exports.getUserTags = async (req, res) => {
+    try {
+        const userId = req.user._id;
+        const feeds = await UserFeed.find({ userId });
+
+        const tagCounts = {};
+        feeds.forEach(feed => {
+            feed.tags.forEach(tag => {
+                tagCounts[tag] = (tagCounts[tag] || 0) + 1;
+            });
+        });
+
+        const tags = Object.entries(tagCounts)
+            .map(([tag, count]) => ({ tag, count }))
+            .sort((a, b) => b.count - a.count);
+
+        res.json({ totalSaved: feeds.length, tags });
+    } catch (error) {
+        console.error('Error fetching user tags:', error);
+        res.status(500).send('Server error');
+    }
+};
+
+// Controller to remove all feed entries for a specific tag
+exports.removeTag = async (req, res) => {
+    try {
+        const userId = req.user._id;
+        const { tag } = req.body;
+        if (!tag) return res.status(400).json({ message: 'Tag is required' });
+        await UserFeed.deleteMany({ userId, tags: tag });
+        res.json({ message: 'Tag removed' });
+    } catch (error) {
+        console.error('Error removing tag:', error);
+        res.status(500).send('Server error');
+    }
+};
+
 // Controller to search for videos
 exports.searchVideos = async (req, res) => {
     try {
