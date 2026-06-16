@@ -11,7 +11,15 @@ require('dotenv').config();
 const app = express();
 
 app.use(cors({
-    origin: process.env.CLIENT_URL || 'http://localhost:3000',
+    origin: (origin, callback) => {
+        const allowed = process.env.CLIENT_URL || 'http://localhost:3000';
+        // Allow any localhost port in development, or the configured CLIENT_URL in production
+        if (!origin || origin === allowed || /^http:\/\/localhost:\d+$/.test(origin)) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
     optionsSuccessStatus: 200
 }))
 
