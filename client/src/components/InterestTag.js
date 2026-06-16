@@ -2,10 +2,10 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const TAGS = [
-  { name: 'Technology', emoji: '💻', bg: 'bg-blue-100', border: 'border-blue-300', text: 'text-blue-700' },
-  { name: 'Fitness',    emoji: '🏋️', bg: 'bg-green-100', border: 'border-green-300', text: 'text-green-700' },
-  { name: 'Travel',     emoji: '✈️', bg: 'bg-orange-100', border: 'border-orange-300', text: 'text-orange-700' },
-  { name: 'Entertainment', emoji: '🎬', bg: 'bg-purple-100', border: 'border-purple-300', text: 'text-purple-700' },
+  { name: 'Technology',    emoji: '💻', color: 'hover:border-blue-500/50 hover:text-blue-400' },
+  { name: 'Fitness',       emoji: '🏋️', color: 'hover:border-green-500/50 hover:text-green-400' },
+  { name: 'Travel',        emoji: '✈️', color: 'hover:border-orange-500/50 hover:text-orange-400' },
+  { name: 'Entertainment', emoji: '🎬', color: 'hover:border-purple-500/50 hover:text-purple-400' },
 ];
 
 const InterestTag = () => {
@@ -17,10 +17,10 @@ const InterestTag = () => {
         <button
           key={tag.name}
           onClick={() => navigate(`/categories/${tag.name}`)}
-          className={`flex flex-col items-center w-16 sm:w-20 p-2 rounded-xl border-2 ${tag.bg} ${tag.border} hover:scale-105 transition-transform`}
+          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-brand-border bg-brand-card text-brand-muted text-xs font-ui font-semibold transition-all duration-200 ${tag.color} hover:bg-brand-surface hover:-translate-y-px`}
         >
-          <span className="text-2xl sm:text-3xl mb-1">{tag.emoji}</span>
-          <span className={`text-xs font-semibold ${tag.text} leading-tight text-center`}>{tag.name}</span>
+          <span>{tag.emoji}</span>
+          <span>{tag.name}</span>
         </button>
       ))}
     </div>

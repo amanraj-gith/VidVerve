@@ -32,60 +32,70 @@ function Signup() {
     }
   };
 
+  const Field = ({ label, type, value, onChange, placeholder }) => (
+    <div>
+      <label className="block font-ui text-xs font-semibold tracking-wider uppercase text-brand-muted mb-2">
+        {label}
+      </label>
+      <input
+        type={type}
+        value={value}
+        onChange={onChange}
+        className="w-full px-4 py-3 bg-brand-surface border border-brand-border rounded-xl text-brand-text text-sm placeholder:text-brand-faint focus:outline-none focus:border-brand-accent/60 focus:ring-1 focus:ring-brand-accent/30 transition-all"
+        placeholder={placeholder}
+        required
+      />
+    </div>
+  );
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-white flex items-center justify-center px-4">
-      <div className="bg-white w-full max-w-md rounded-2xl shadow-lg p-8">
-        <h1 className="text-3xl font-extrabold text-gray-900 mb-1">Create account</h1>
-        <p className="text-gray-500 mb-8 text-sm">Join VidVerve and start building your feed</p>
+    <div className="min-h-screen bg-brand-bg font-body flex items-center justify-center px-4 py-16">
+      <div className="w-full max-w-md">
+        <div className="bg-brand-card border border-brand-border rounded-2xl overflow-hidden">
+          <div className="h-0.5 bg-gradient-to-r from-transparent via-brand-accent to-transparent" />
 
-        <form onSubmit={handleSignup} className="space-y-5">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
-            <input
-              type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400 text-sm"
-              placeholder="Your name"
-              required
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400 text-sm"
-              placeholder="you@example.com"
-              required
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400 text-sm"
-              placeholder="••••••••"
-              required
-            />
-          </div>
-          {error && <p className="text-red-500 text-sm">{error}</p>}
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full bg-blue-600 text-white py-3 rounded-xl font-semibold hover:bg-blue-700 transition-colors disabled:opacity-60 text-sm"
-          >
-            {loading ? 'Creating account…' : 'Create account'}
-          </button>
-        </form>
+          <div className="p-8">
+            <h1 className="font-display text-3xl text-brand-text mb-1">Create account</h1>
+            <p className="text-brand-muted text-sm font-body mb-8">Join VidVerve and build your perfect feed</p>
 
-        <p className="mt-6 text-center text-sm text-gray-500">
-          Already have an account?{' '}
-          <Link to="/login" className="text-blue-600 font-semibold hover:underline">Sign in</Link>
-        </p>
+            <form onSubmit={handleSignup} className="space-y-5">
+              <Field
+                label="Name" type="text" value={name}
+                onChange={(e) => setName(e.target.value)} placeholder="Your name"
+              />
+              <Field
+                label="Email" type="email" value={email}
+                onChange={(e) => setEmail(e.target.value)} placeholder="you@example.com"
+              />
+              <Field
+                label="Password" type="password" value={password}
+                onChange={(e) => setPassword(e.target.value)} placeholder="••••••••"
+              />
+
+              {error && (
+                <div className="flex items-center gap-2 px-3 py-2.5 bg-brand-accent-2/10 border border-brand-accent-2/20 rounded-lg">
+                  <span className="text-brand-accent-2 text-xs">⚠</span>
+                  <p className="text-brand-accent-2 text-xs font-semibold">{error}</p>
+                </div>
+              )}
+
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full font-ui font-bold text-sm tracking-wide py-3 rounded-xl bg-brand-accent text-brand-bg hover:bg-amber-400 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed mt-2"
+              >
+                {loading ? 'Creating account…' : 'Create account'}
+              </button>
+            </form>
+
+            <p className="mt-6 text-center text-sm text-brand-muted font-body">
+              Already have an account?{' '}
+              <Link to="/login" className="text-brand-accent font-semibold hover:underline">
+                Sign in
+              </Link>
+            </p>
+          </div>
+        </div>
       </div>
     </div>
   );
