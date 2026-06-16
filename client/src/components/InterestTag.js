@@ -1,40 +1,30 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const InterestTag = ({ onClick }) => {
-    const tags = [
-        { name: 'Technology', imgSrc: '/images/tech.webp' },
-        { name: 'Fitness', imgSrc: '/images/fitness.webp' },
-        { name: 'Travel', imgSrc: '/images/tech.webp' },  
-        { name: 'Entertainment', imgSrc: '/images/fitness.webp' },
-    ];
+const TAGS = [
+  { name: 'Technology', emoji: '💻', bg: 'bg-blue-100', border: 'border-blue-300', text: 'text-blue-700' },
+  { name: 'Fitness',    emoji: '🏋️', bg: 'bg-green-100', border: 'border-green-300', text: 'text-green-700' },
+  { name: 'Travel',     emoji: '✈️', bg: 'bg-orange-100', border: 'border-orange-300', text: 'text-orange-700' },
+  { name: 'Entertainment', emoji: '🎬', bg: 'bg-purple-100', border: 'border-purple-300', text: 'text-purple-700' },
+];
 
-    const navigate = useNavigate();
+const InterestTag = () => {
+  const navigate = useNavigate();
 
-    const handleClick = (tag) => {
-        navigate(`/categories/${tag}`);  
-    };
-
-    return (
-        <div className="flex space-x-4">
-            {tags.map((tag) => (
-                <button
-                    key={tag.name}
-                    className="flex flex-col items-center hover:text-blue-700"
-                    onClick={() => handleClick(tag.name)}
-                >
-                    <img
-                        src={tag.imgSrc}
-                        alt={tag.name}
-                        className="w-24 h-24 rounded-full mx-2 mb-4 hover:text-blue-700 mt-2 hover:h-20 hover:w-20 border-2 shadow-custom-black border-x-white"
-                    />
-                    <div className="text-white font-bold text-sm px-2 rounded">
-                        {tag.name}
-                    </div>
-                </button>
-            ))}
-        </div>
-    );
+  return (
+    <div className="flex flex-wrap gap-2">
+      {TAGS.map(tag => (
+        <button
+          key={tag.name}
+          onClick={() => navigate(`/categories/${tag.name}`)}
+          className={`flex flex-col items-center w-16 sm:w-20 p-2 rounded-xl border-2 ${tag.bg} ${tag.border} hover:scale-105 transition-transform`}
+        >
+          <span className="text-2xl sm:text-3xl mb-1">{tag.emoji}</span>
+          <span className={`text-xs font-semibold ${tag.text} leading-tight text-center`}>{tag.name}</span>
+        </button>
+      ))}
+    </div>
+  );
 };
 
 export default InterestTag;

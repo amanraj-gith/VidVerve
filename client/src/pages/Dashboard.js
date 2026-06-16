@@ -6,112 +6,104 @@ import { Link } from 'react-router-dom';
 
 const FEATURED_QUERY = 'latest tech trends';
 
+const SkeletonCard = () => (
+  <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden animate-pulse">
+    <div className="w-full h-44 bg-gray-200" />
+    <div className="p-3 space-y-2">
+      <div className="h-3 bg-gray-200 rounded w-full" />
+      <div className="h-3 bg-gray-200 rounded w-2/3" />
+      <div className="h-8 bg-gray-100 rounded mt-3" />
+    </div>
+  </div>
+);
+
 function Dashboard() {
-    const [featuredVideos, setFeaturedVideos] = useState([]);
+  const [featuredVideos, setFeaturedVideos] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
-        fetchFeaturedVideos();
-    }, []);
+  useEffect(() => {
+    fetchFeaturedVideos();
+  }, []);
 
-    const fetchFeaturedVideos = async () => {
-        try {
-            const response = await axios.post(`${process.env.REACT_APP_API_BASE}/api/video/featured`, {
-                query: FEATURED_QUERY
-            });
+  const fetchFeaturedVideos = async () => {
+    try {
+      const response = await axios.post(`${process.env.REACT_APP_API_BASE}/api/video/featured`, {
+        query: FEATURED_QUERY,
+      });
+      const processed = response.data.map(video => ({
+        ...video,
+        id: video.id.videoId,
+        thumbnail: video.snippet.thumbnails?.medium?.url,
+      }));
+      setFeaturedVideos(processed);
+    } catch (error) {
+      console.error('Error fetching featured videos:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-            // Ensure video objects have thumbnails
-            const processedVideos = response.data.map(video => ({
-                ...video,
-                id: video.id.videoId,
-                thumbnail: video.snippet.thumbnails.medium.url // Add thumbnail URL
-            }));
+  const handleAddToFeeder = async (videoId) => {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) { alert('Please log in first'); return; }
+      await axios.post(
+        `${process.env.REACT_APP_API_BASE}/api/video/add-to-feeder`,
+        { videoId, tags: [FEATURED_QUERY] },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      alert('Added to your feed!');
+    } catch {
+      alert('Failed to add — please try again.');
+    }
+  };
 
-            setFeaturedVideos(processedVideos);
-        } catch (error) {
-            console.error('Error fetching featured videos:', error);
-        }
-    };
-
-    const handleSearch = (query) => {
-        axios.get(`${process.env.REACT_APP_API_BASE}/api/video/search`, {
-            params: { q: query }
-        })
-        .then(() => {
-        })
-        .catch(error => {
-            console.error('Failed to fetch search results:', error);
-        });
-    };
-
-    const handleAddToFeeder = async (videoId, tags) => {
-        try {
-            const token = localStorage.getItem('token');
-            if (!token) {
-                alert('Please log in first');
-                return;
-            }
-            await axios.post(
-                `${process.env.REACT_APP_API_BASE}/api/video/add-to-feeder`,
-                { videoId, tags },
-                { headers: { Authorization: `Bearer ${token}` } }
-            );
-            alert('Video added to your feeder!');
-        } catch (error) {
-            console.error('Failed to add video to feeder:', error);
-            alert('Failed to add video to feeder');
-        }
-    };
-
-    const VideoCard = ({ video }) => {
-        const tags = [FEATURED_QUERY];
-
-        return (
-            <div className="border rounded-lg shadow pb-2 cursor-pointer h-80 bg-white left-8">
-                <Link to={`/video/${video.id}`}>
-                    <img
-                        src={video.thumbnail}
-                        alt={video.snippet.title}
-                        className="w-full h-48 object-cover rounded-t-lg"
-                    />
-                    <h3 className="text-lg font-semibold mt-2 p-2 max-w-80 overflow-hidden text-ellipsis whitespace-nowrap">
-                        {video.snippet.title}
-                    </h3>
-                <p className="text-gray-600 pl-2 pt-2">{video.snippet.channelTitle}</p>
-                </Link>
-                <button
-                    onClick={() => handleAddToFeeder(video.id, tags)}
-                    className="w-full mt-2 bg-blue-500 text-white py-2 rounded-b-lg hover:bg-blue-600"
-                >
-                    Add to Feeder
-                </button>
-            </div>
-        );
-    };
-
-    return (
-        <div className="Main bg-blue-100 h-screen">
-            <div className='flex'>
-                <div className='relative w-screen shadow-2xl'>    
-                    <SearchBar onSearch={handleSearch} />
-                </div>
-                <div className='absolute right-16 top-16'>
-                    <InterestTag/>
-                </div>
-            </div>
-            <div className="flex flex-col gap-4 mt-4 ">
-                <div>
-                    <h2 className="text-xl font-bold mb-4 ml-10">Featured Content</h2>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 ">
-                        {featuredVideos.map(video => (
-                            <VideoCard key={video.id} video={video} />
-                        ))}
-                    </div>
-                </div>
-            </div>
-            <span className='m-20'></span>
+  const VideoCard = ({ video }) => (
+    <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow flex flex-col">
+      <Link to={`/video/${video.id}`}>
+        <img
+          src={video.thumbnail}
+          alt={video.snippet.title}
+          className="w-full h-44 object-cover"
+        />
+        <div className="p-3">
+          <h3 className="font-semibold text-gray-900 text-sm leading-snug mb-1 overflow-hidden" style={{ display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>
+            {video.snippet.title}
+          </h3>
+          <p className="text-gray-500 text-xs">{video.snippet.channelTitle}</p>
         </div>
-        
-    );
+      </Link>
+      <div className="px-3 pb-3 mt-auto">
+        <button
+          onClick={() => handleAddToFeeder(video.id)}
+          className="w-full bg-blue-600 text-white text-sm py-2 rounded-lg hover:bg-blue-700 transition-colors font-medium"
+        >
+          + Add to Feed
+        </button>
+      </div>
+    </div>
+  );
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      <div className="bg-[#3ABEF9] px-4 sm:px-8 py-5">
+        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
+          <SearchBar />
+          <InterestTag />
+        </div>
+      </div>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-8 py-6">
+        <h2 className="text-xl font-bold text-gray-900 mb-4">Featured Content</h2>
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+          {loading
+            ? [...Array(8)].map((_, i) => <SkeletonCard key={i} />)
+            : featuredVideos.map(video => <VideoCard key={video.id} video={video} />)
+          }
+        </div>
+      </div>
+    </div>
+  );
 }
 
 export default Dashboard;
