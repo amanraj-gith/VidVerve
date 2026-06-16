@@ -17,6 +17,7 @@ import { AuthProvider, AuthContext } from "./context/AuthContext";
 import Dashboard from "./pages/Dashboard";
 import VideoPlayer from './components/videoPlayer';
 import SearchResults from "./pages/SearchResults";
+import Explore from "./pages/Explore";
 
 function ProtectedRoute({ children }) {
   const { isAuthenticated } = useContext(AuthContext);
@@ -85,6 +86,14 @@ function App() {
             <Route
               path="/video/:videoId"  
               element={<VideoPlayer />}
+            />
+            <Route
+              path="/explore"
+              element={
+                <ProtectedRoute>
+                  <Explore />
+                </ProtectedRoute>
+              }
             />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />

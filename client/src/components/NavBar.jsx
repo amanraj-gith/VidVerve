@@ -51,6 +51,7 @@ function NavBar() {
             {isAuthenticated && (
               <>
                 {navLink('/dashboard', 'Dashboard')}
+                {navLink('/explore', 'Explore')}
                 {navLink('/myfeed', 'My Feed')}
                 {navLink('/profile', 'Profile')}
               </>
@@ -107,6 +108,7 @@ function NavBar() {
             {isAuthenticated ? (
               <>
                 <Link to="/dashboard" className="block px-3 py-2.5 rounded-lg text-brand-text hover:bg-brand-card text-sm font-semibold">Dashboard</Link>
+                <Link to="/explore" className="block px-3 py-2.5 rounded-lg text-brand-text hover:bg-brand-card text-sm font-semibold">Explore</Link>
                 <Link to="/myfeed" className="block px-3 py-2.5 rounded-lg text-brand-text hover:bg-brand-card text-sm font-semibold">My Feed</Link>
                 <Link to="/profile" className="block px-3 py-2.5 rounded-lg text-brand-text hover:bg-brand-card text-sm font-semibold">Profile</Link>
                 <div className="flex items-center justify-between px-3 pt-3 mt-1 border-t border-brand-border">
