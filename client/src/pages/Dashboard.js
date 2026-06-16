@@ -7,12 +7,12 @@ import { Link } from 'react-router-dom';
 const FEATURED_QUERY = 'latest tech trends';
 
 const SkeletonCard = () => (
-  <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden animate-pulse">
-    <div className="w-full h-44 bg-gray-200" />
+  <div className="bg-brand-card rounded-xl border border-brand-border overflow-hidden">
+    <div className="w-full h-44 skeleton" />
     <div className="p-3 space-y-2">
-      <div className="h-3 bg-gray-200 rounded w-full" />
-      <div className="h-3 bg-gray-200 rounded w-2/3" />
-      <div className="h-8 bg-gray-100 rounded mt-3" />
+      <div className="h-3 skeleton rounded w-full" />
+      <div className="h-3 skeleton rounded w-2/3" />
+      <div className="h-8 skeleton rounded mt-3" />
     </div>
   </div>
 );
@@ -36,8 +36,8 @@ function Dashboard() {
         thumbnail: video.snippet.thumbnails?.medium?.url,
       }));
       setFeaturedVideos(processed);
-    } catch (error) {
-      console.error('Error fetching featured videos:', error);
+    } catch (err) {
+      console.error('Error fetching featured videos:', err);
     } finally {
       setLoading(false);
     }
@@ -54,29 +54,34 @@ function Dashboard() {
       );
       alert('Added to your feed!');
     } catch {
-      alert('Failed to add — please try again.');
+      alert('Failed — please try again.');
     }
   };
 
-  const VideoCard = ({ video }) => (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow flex flex-col">
-      <Link to={`/video/${video.id}`}>
+  const VideoCard = ({ video, index }) => (
+    <div
+      className="group bg-brand-card rounded-xl border border-brand-border hover:border-brand-accent/25 transition-all duration-250 hover:-translate-y-0.5 hover:shadow-amber-sm flex flex-col opacity-0 animate-fade-up"
+      style={{ animationDelay: `${index * 45}ms` }}
+    >
+      <Link to={`/video/${video.id}`} className="block overflow-hidden rounded-t-xl">
         <img
           src={video.thumbnail}
           alt={video.snippet.title}
-          className="w-full h-44 object-cover"
+          className="w-full h-44 object-cover group-hover:scale-[1.02] transition-transform duration-300"
         />
-        <div className="p-3">
-          <h3 className="font-semibold text-gray-900 text-sm leading-snug mb-1 overflow-hidden" style={{ display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>
+      </Link>
+      <div className="p-3 flex-1">
+        <Link to={`/video/${video.id}`}>
+          <h3 className="text-brand-text font-body font-semibold text-sm leading-snug line-clamp-2 mb-1 group-hover:text-brand-accent transition-colors duration-200">
             {video.snippet.title}
           </h3>
-          <p className="text-gray-500 text-xs">{video.snippet.channelTitle}</p>
-        </div>
-      </Link>
-      <div className="px-3 pb-3 mt-auto">
+          <p className="text-brand-muted text-xs font-body">{video.snippet.channelTitle}</p>
+        </Link>
+      </div>
+      <div className="px-3 pb-3">
         <button
           onClick={() => handleAddToFeeder(video.id)}
-          className="w-full bg-blue-600 text-white text-sm py-2 rounded-lg hover:bg-blue-700 transition-colors font-medium"
+          className="w-full py-2 text-xs font-ui font-bold tracking-wide rounded-lg bg-brand-border text-brand-muted group-hover:bg-brand-accent group-hover:text-brand-bg transition-all duration-200"
         >
           + Add to Feed
         </button>
@@ -85,20 +90,25 @@ function Dashboard() {
   );
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="bg-[#3ABEF9] px-4 sm:px-8 py-5">
+    <div className="min-h-screen bg-brand-bg font-body">
+      {/* Header */}
+      <div className="bg-brand-surface border-b border-brand-border px-4 sm:px-8 py-5">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
           <SearchBar />
           <InterestTag />
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-8 py-6">
-        <h2 className="text-xl font-bold text-gray-900 mb-4">Featured Content</h2>
+      {/* Grid */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-8 py-8">
+        <div className="flex items-center gap-3 mb-6">
+          <h2 className="font-ui font-bold text-brand-text text-lg tracking-tight">Featured Content</h2>
+          <div className="flex-1 h-px bg-brand-border" />
+        </div>
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
           {loading
             ? [...Array(8)].map((_, i) => <SkeletonCard key={i} />)
-            : featuredVideos.map(video => <VideoCard key={video.id} video={video} />)
+            : featuredVideos.map((video, i) => <VideoCard key={video.id} video={video} index={i} />)
           }
         </div>
       </div>

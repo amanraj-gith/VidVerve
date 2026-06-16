@@ -2,44 +2,94 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 const features = [
-  { icon: '🎯', title: 'Personalized Feed', desc: 'Save videos you like and get more of what matters to you.' },
-  { icon: '🔍', title: 'Smart Search', desc: 'Find any topic instantly with YouTube-powered search.' },
-  { icon: '📂', title: 'Browse by Category', desc: 'Explore Technology, Fitness, Travel, Entertainment and more.' },
+  {
+    icon: '🎯',
+    title: 'Built for you',
+    desc: 'Like a video and save it to your feed. VidVerve learns what you love and keeps showing you more of it.',
+  },
+  {
+    icon: '⚡',
+    title: 'Instant discovery',
+    desc: 'Search anything. Get YouTube results in seconds, without the noise of an algorithm you never asked for.',
+  },
+  {
+    icon: '📂',
+    title: 'Browse by mood',
+    desc: 'Dive into Technology, Fitness, Travel, or Entertainment — hand-curated categories, one click away.',
+  },
 ];
 
 function Home() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-white">
-      <div className="max-w-4xl mx-auto px-6 pt-20 pb-16 text-center">
-        <h1 className="text-5xl sm:text-6xl font-extrabold text-gray-900 mb-6 leading-tight">
-          Your personal<br />
-          <span className="text-blue-600">YouTube feed</span>
-        </h1>
-        <p className="text-xl text-gray-500 mb-10 max-w-xl mx-auto leading-relaxed">
-          Discover videos that match your interests. Save, explore, and build a feed that's entirely yours.
-        </p>
-        <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Link
-            to="/signup"
-            className="bg-blue-600 text-white text-lg font-semibold px-8 py-3 rounded-xl hover:bg-blue-700 transition-colors shadow-md"
-          >
-            Get started free
-          </Link>
-          <Link
-            to="/login"
-            className="border-2 border-gray-300 text-gray-700 text-lg font-semibold px-8 py-3 rounded-xl hover:border-blue-400 hover:text-blue-600 transition-colors"
-          >
-            Log in
-          </Link>
+    <div className="min-h-screen bg-brand-bg font-body overflow-x-hidden">
+
+      {/* Hero */}
+      <div className="relative px-6 pt-24 pb-20 text-center">
+        {/* Ambient glow */}
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            background:
+              'radial-gradient(ellipse 80% 50% at 50% -10%, rgba(240,165,0,0.12) 0%, transparent 70%)',
+          }}
+        />
+
+        <div className="relative max-w-3xl mx-auto">
+          {/* Eyebrow */}
+          <p className="inline-flex items-center gap-2 text-brand-accent font-ui font-semibold text-xs tracking-[0.18em] uppercase mb-6 px-3 py-1.5 rounded-full border border-brand-accent/20 bg-brand-accent/5">
+            <span className="w-1.5 h-1.5 rounded-full bg-brand-accent inline-block" />
+            Your video feed, your way
+          </p>
+
+          <h1 className="font-display text-5xl sm:text-6xl lg:text-7xl text-brand-text leading-tight mb-6">
+            Discover what
+            <span
+              className="block italic text-brand-accent"
+              style={{ textShadow: '0 0 60px rgba(240,165,0,0.25)' }}
+            >
+              moves you
+            </span>
+          </h1>
+
+          <p className="text-brand-muted text-lg sm:text-xl max-w-xl mx-auto mb-10 leading-relaxed">
+            Stop scrolling endlessly. Build a feed that's curated by you, for you — powered by YouTube, owned by your taste.
+          </p>
+
+          <div className="flex flex-col sm:flex-row gap-3 justify-center items-center">
+            <Link
+              to="/signup"
+              className="font-ui font-bold text-sm tracking-wide px-8 py-3.5 rounded-xl bg-brand-accent text-brand-bg hover:bg-amber-400 transition-all duration-200 shadow-amber-sm hover:shadow-amber-md w-full sm:w-auto"
+            >
+              Start for free
+            </Link>
+            <Link
+              to="/login"
+              className="font-ui font-semibold text-sm tracking-wide px-8 py-3.5 rounded-xl border border-brand-border text-brand-muted hover:border-brand-faint hover:text-brand-text transition-all duration-200 w-full sm:w-auto"
+            >
+              I have an account
+            </Link>
+          </div>
         </div>
       </div>
 
-      <div className="max-w-5xl mx-auto px-6 pb-20 grid grid-cols-1 sm:grid-cols-3 gap-6">
-        {features.map(f => (
-          <div key={f.title} className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 text-center">
-            <div className="text-4xl mb-3">{f.icon}</div>
-            <h3 className="font-bold text-gray-900 text-lg mb-2">{f.title}</h3>
-            <p className="text-gray-500 text-sm leading-relaxed">{f.desc}</p>
+      {/* Divider */}
+      <div className="max-w-4xl mx-auto px-6">
+        <div className="h-px bg-gradient-to-r from-transparent via-brand-border to-transparent" />
+      </div>
+
+      {/* Features */}
+      <div className="max-w-5xl mx-auto px-6 py-20 grid grid-cols-1 sm:grid-cols-3 gap-5">
+        {features.map((f, i) => (
+          <div
+            key={f.title}
+            className="bg-brand-card rounded-2xl p-6 border border-brand-border hover:border-brand-accent/20 transition-all duration-300 group"
+            style={{ animationDelay: `${i * 100}ms` }}
+          >
+            <div className="text-3xl mb-4">{f.icon}</div>
+            <h3 className="font-ui font-bold text-brand-text text-base mb-2 group-hover:text-brand-accent transition-colors duration-200">
+              {f.title}
+            </h3>
+            <p className="text-brand-muted text-sm leading-relaxed">{f.desc}</p>
           </div>
         ))}
       </div>
